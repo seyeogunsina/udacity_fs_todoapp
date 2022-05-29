@@ -9,20 +9,54 @@
                 list-style: none;
                 padding: 0;
                 margin: 0;
+                width: 300px;
+            }
+            li {
+                clear: both
+            }
+            li button {
+                -webkit-appearance: none;
+                border: none;
+                outline: none;
+                color: red;
+                float: right;
+                cursor: pointer;
+                font-size: 20px;
+            }
+            .lists-wrapper, todos-wrapper {
+                display: inline-block;
+                vertical-align: top;
             }
         </style>
     </head>
     <body>
-        <form id="form">
-            <input type="text" name="description" id="description"/>
-            <input type="submit" value="Create" />
-        </form>
-        <div id="error" class="hidden">Something went wrong!</div>
-        <ul id="todos">
-            {% for d in data %}
-            <li><input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %} />{{ d.description }}</li>
-            {% endfor %}
-        </ul>
+        <div class="lists-wrapper">
+            <ul id="lists">
+                {% for list in lists %}
+                <li>
+                    <a href="/lists/{{ list.id }}">
+                        {{ list.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="todos-wrapper">
+            <h4>{{ active_list.name }}</h4>
+            <form id="form">
+                <input type="text" name="description" id="description"/>
+                <input type="submit" value="Create" />
+            </form>
+            <div id="error" class="hidden">Something went wrong!</div>
+            <ul id="todos">
+                {% for todo in todos %}
+                <li>
+                    <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" {% if todo.completed %} checked {% endif %} />
+                    {{ d.description }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         <script>
             const checkboxes = document.querySelectorAll('.check-completed');
             for (let i = 0; i < checkboxes.length; i++) {
@@ -39,7 +73,7 @@
                             'Content-Type': 'application/json'
                         }
                     })
-                    .then(function(response) {
+                    .then(function() {
                         document.getElementById('error').className = 'hidden';
                     })
                     .catch(function() {
